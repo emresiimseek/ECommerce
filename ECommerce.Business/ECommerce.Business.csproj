@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="9.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ECommerce.DataAccsess\ECommerce.DataAccsess.csproj" />
+    <ProjectReference Include="..\ECommerce.EntityFramework\ECommerce.EntityFramework.csproj" />
+  </ItemGroup>
+
+</Project>
