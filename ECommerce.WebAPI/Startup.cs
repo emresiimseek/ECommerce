@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using ECommerce.Business.Abstract;
 using ECommerce.Business.Concrete;
 using ECommerce.Business.ValidationRules.FluentValidation;
+using ECommerce.Data.Concrete;
 using ECommerce.DataAccsess;
 using ECommerce.DataAccsess.Abstract;
 using ECommerce.DataAccsess.Concrete;
@@ -16,6 +18,7 @@ using ECommerce.FrameworkCore.Utilities.Mappings;
 using ECommerce.WebAPI.Filters;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -25,6 +28,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ECommerce.WebAPI
 {
@@ -54,11 +58,36 @@ namespace ECommerce.WebAPI
                 //...mvc setup...
             }).AddFluentValidation();
             services.AddTransient<IValidator<CustomerDto>, CustomerValidator>();
+            services.AddTransient<IValidator<PersonDto>, PersonValidator>();
 
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
+            //jwt
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            //configure jwt authentication
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(x =>
+                {
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
 
             //DI Configurations
             services.AddScoped(typeof(IRepository<>), typeof(RepositoryBase<>));
@@ -88,6 +117,7 @@ namespace ECommerce.WebAPI
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

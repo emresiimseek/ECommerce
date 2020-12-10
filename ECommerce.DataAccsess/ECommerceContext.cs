@@ -26,6 +26,7 @@ namespace ECommerce.DataAccsess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            
             modelBuilder.Entity<Person>().ToTable("People");
 
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());

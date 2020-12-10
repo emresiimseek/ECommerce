@@ -1,7 +1,9 @@
 ﻿using ECommerce.Business.Abstract;
+using ECommerce.Data.Concrete;
 using ECommerce.DataAccsess.Abstract;
 using ECommerce.DataAccsess.Concrete;
 using ECommerce.EntityFramework.Concrete;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,7 +13,7 @@ namespace ECommerce.Business.Concrete
 {
     public class CustomerManager : PersonService
     {
-        public CustomerManager(IPersonDal personDal) : base(personDal)
+        public CustomerManager(IPersonDal personDal, IOptions<AppSettings> appSettings) : base(personDal, appSettings)
         {
 
         }

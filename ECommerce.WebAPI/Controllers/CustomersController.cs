@@ -8,12 +8,14 @@ using ECommerce.EntityFramework.Concrete.DTOs;
 using ECommerce.FrameworkCore.Utilities.Mappings;
 using ECommerce.WebAPI.Filters;
 using ECommerce.WebAPI.Filters.FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.WebAPI.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class CustomersController : ControllerBase
     {

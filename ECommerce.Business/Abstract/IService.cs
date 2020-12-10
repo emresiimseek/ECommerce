@@ -15,5 +15,6 @@ namespace ECommerce.Business.Abstract
         public abstract Task<TEntity> GetByIdAsync(int id);
         public abstract Task<TEntity> GetAsync();
         public abstract IEnumerable<TEntity> GetAll();
+
     }
 }
