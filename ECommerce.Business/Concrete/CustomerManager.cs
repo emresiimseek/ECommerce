@@ -20,6 +20,7 @@ namespace ECommerce.Business.Concrete
 
         public override async Task<Customer> AddAsync(Customer Entity)
         {
+            Entity.Password= Encrypt(Entity.Password);
             return await _personDal.AddAsync(Entity) as Customer;
         }
 
